@@ -95,8 +95,6 @@ function readTimeoutMs(...values) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Allow Replit preview domains for cross-origin dev resources (HMR, etc.)
-  allowedDevOrigins: ["*.replit.dev", "*.sisko.replit.dev", "*.repl.co"],
   // Opt-in subpath deployment behind a reverse proxy (e.g. nginx/Caddy serving
   // OmniRoute under https://host/omniroute/). Empty by default so root-path
   // deployments are unaffected. Next.js strips this prefix from `pathname`
@@ -262,7 +260,16 @@ const nextConfig = {
     "process",
   ],
   transpilePackages: ["@omniroute/open-sse", "@lobehub/icons", "fumadocs-ui", "fumadocs-core"],
-  allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.0.250"],
+  allowedDevOrigins: [
+    "localhost",
+    "127.0.0.1",
+    "192.168.0.250",
+    // Allow all Replit preview domains
+    ...(process.env.REPLIT_DEV_DOMAIN ? [process.env.REPLIT_DEV_DOMAIN] : []),
+    "*.replit.dev",
+    "*.sisko.replit.dev",
+    "*.repl.co",
+  ],
   typescript: {
     // TODO: Re-enable after fixing all sub-component useTranslations scope issues
     ignoreBuildErrors: true,
